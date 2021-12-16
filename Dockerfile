@@ -1,7 +1,7 @@
 FROM php:7.3-fpm
 
 # Copy composer.lock and composer.json
-COPY composer.lock composer.json /var/www/
+#COPY ./application/composer.lock ./application/composer.json ${APP_PATH_CONTAINER}
 
 # Set working directory
 WORKDIR /var/www
@@ -21,7 +21,8 @@ RUN apt-get update && apt-get install -y \
     vim \
     unzip \
     git \
-    curl
+    curl \
+    cron
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
