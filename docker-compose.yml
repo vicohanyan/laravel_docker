@@ -27,7 +27,7 @@ services:
         restart: unless-stopped
         tty: true
         ports:
-            - "80:80"
+            - "70:70"
             - "443:443"
         volumes:
             - ./:/var/www
@@ -42,7 +42,7 @@ services:
         restart: unless-stopped
         tty: true
         ports:
-            - "3306:3306"
+            - "3307:3307"
         environment:
             MYSQL_DATABASE: laravel
             MYSQL_ROOT_PASSWORD: admin
