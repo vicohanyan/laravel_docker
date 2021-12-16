@@ -13,9 +13,9 @@ services:
         environment:
             SERVICE_NAME: app
             SERVICE_TAGS: dev
-        working_dir: /var/www
+        working_dir: ${APP_PATH_CONTAINER}
         volumes:
-            - ./:/var/www
+            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
             - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - app-network
@@ -27,10 +27,10 @@ services:
         restart: unless-stopped
         tty: true
         ports:
-            - "70:70"
+            - "70:80"
             - "443:443"
         volumes:
-            - ./:/var/www
+            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
             - ./nginx/conf.d/:/etc/nginx/conf.d/
         networks:
             - app-network
@@ -42,17 +42,25 @@ services:
         restart: unless-stopped
         tty: true
         ports:
-            - "3307:3307"
+            - "3307:3306"
         environment:
             MYSQL_DATABASE: laravel
             MYSQL_ROOT_PASSWORD: admin
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         volumes:
-            - dbdata:/var/lib/mysql/
+            - ${DB_PATH_HOST}:/var/lib/mysql/
             - ./mysql/my.cnf:/etc/mysql/my.cnf
         networks:
             - app-network
+
+    #Composer Service
+    composer:
+        image: composer
+        volumes:
+            - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
+        working_dir: ${APP_PATH_CONTAINER}
+        command: composer install
 
 #Docker Networks
 networks:
