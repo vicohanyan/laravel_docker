@@ -1,7 +1,4 @@
-FROM php:7.3-fpm
-
-# Copy composer.lock and composer.json
-#COPY ./application/composer.lock ./application/composer.json ${APP_PATH_CONTAINER}
+FROM php:7.4-fpm
 
 # Set working directory
 WORKDIR /var/www
@@ -28,10 +25,15 @@ RUN apt-get update && apt-get install -y \
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Install extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl
+RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
 
 # Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Create system user to run Composer and Artisan Commands
+RUN useradd -G www-data,root -u $uid -d /home/$user $user
+RUN mkdir -p /home/$user/.composer && \
+    chown -R $user:$user /home/$user
 
 # Add user for laravel application
 RUN groupadd -g 1000 www
