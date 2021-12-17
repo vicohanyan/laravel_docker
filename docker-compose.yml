@@ -16,7 +16,7 @@ services:
         working_dir: ${APP_PATH_CONTAINER}
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
-            - ./php/local.ini:/usr/local/etc/php/conf.d/local.ini
+            - .docker/php/local.ini:/usr/local/etc/php/conf.d/local.ini
         networks:
             - app-network
         depends_on:
@@ -42,7 +42,7 @@ services:
             - "443:443"
         volumes:
             - ${APP_PATH_HOST}:${APP_PATH_CONTAINER}
-            - ./nginx/conf.d/:/etc/nginx/conf.d/
+            - .docker/nginx/conf.d/:/etc/nginx/conf.d/
         networks:
             - app-network
 
@@ -61,10 +61,22 @@ services:
             SERVICE_NAME: mysql
         volumes:
             - ${DB_PATH_HOST}:/var/lib/mysql/
-            - ./mysql/my.cnf:/etc/mysql/my.cnf
+            - .docker/mysql/my.cnf:/etc/mysql/my.cnf
         networks:
             - app-network
 
+    #RabbitMQ Service
+    rabbitmq:
+        image: rabbitmq:3-management-alpine
+        container_name: 'rabbitmq'
+        ports:
+            - 5672:5672
+            - 15672:15672
+        volumes:
+            - .docker/rabbitmq/data/:/var/lib/rabbitmq/
+            - .docker/rabbitmq/log/:/var/log/rabbitmq
+        networks:
+            - app-network
 
 #Docker Networks
 networks:

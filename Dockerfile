@@ -14,10 +14,6 @@ RUN docker-php-ext-install pdo_mysql pdo_pgsql tokenizer exif zip && \
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-
-# Give execution rights on the cron job
-RUN chmod 0644 /etc/cron.d/hello-cron
-
 # Create the log file to be able to run tail
 # Run the command on container startup
 CMD cron && touch /var/log/cron.log && tail -F /var/log/cron.log
