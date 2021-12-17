@@ -1,39 +1,29 @@
 FROM php:7.4-fpm
 
-# Set working directory
-WORKDIR /var/www
+WORKDIR /var/www/application
 
-# Install dependencies
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    libzip-dev \
-    libpng-dev \
-    libjpeg62-turbo-dev \
-    libwebp-dev libjpeg62-turbo-dev libpng-dev libxpm-dev \
-    libfreetype6 \
-    libfreetype6-dev \
-    locales \
-    zip \
-    jpegoptim optipng pngquant gifsicle \
-    vim \
-    unzip \
-    git \
-    curl \
-    cron
+RUN apt-get update && \
+    apt-get upgrade -y && \
+    apt-get install -y curl git zip unzip libpq-dev libwebp-dev libzip-dev libpng-dev python3 libfreetype6-dev libjpeg62-turbo-dev procps sudo acl cron
+
+RUN docker-php-ext-install pdo_mysql pdo_pgsql tokenizer exif zip && \
+    docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg && \
+    docker-php-ext-install -j$(nproc) gd && \
+    apt -y autoremove
 
 # Clear cache
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Install extensions
-RUN docker-php-ext-install pdo_mysql zip exif pcntl bcmath gd
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/hello-cron
+
+# Create the log file to be able to run tail
+# Run the command on container startup
+CMD cron && touch /var/log/cron.log && tail -F /var/log/cron.log
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-
-# Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u ${uid} -d /home/${user} ${user}
-RUN mkdir -p /home/${user}/.composer && \
-    chown -R ${user}:${user} /home/${user}
 
 # Add user for laravel application
 RUN groupadd -g 1000 www
