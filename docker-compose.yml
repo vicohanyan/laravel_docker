@@ -60,7 +60,7 @@ services:
             SERVICE_TAGS: dev
             SERVICE_NAME: mysql
         volumes:
-            - ${DB_PATH_HOST}:/var/lib/mysql/
+            - ${DB_PATH_HOST}/.docker:/var/lib/mysql/
             - .docker/mysql/my.cnf:/etc/mysql/my.cnf
         networks:
             - app-network
