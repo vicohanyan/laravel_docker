@@ -3,25 +3,31 @@
 namespace App\Http\Controllers;
 
 use App\Jobs\CSVFileImportJob;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class CSVUploadController extends Controller
 {
+
     public function createForm()
     {
         return view('csv/csv-upload');
     }
 
-    public function fileUpload(Request $req)
+    /**
+     * @param Request $request
+     * @return RedirectResponse
+     */
+    public function fileUpload(Request $request): RedirectResponse
     {
-        $req->validate([
+        $request->validate([
             'file' => 'required|mimes:csv,txt|max:16384'
         ]);
 
-        if ($req->file()) {
-            $fileName = time() . '_' . $req->file->getClientOriginalName();
-            $req->file('file')->storeAs('uploads', $fileName, 'public');
+        if ($request->file()) {
+            $fileName = time() . '_' . $request->file->getClientOriginalName();
+            $request->file('file')->storeAs('uploads', $fileName, 'public');
             // Run CSV import Job
             $this->dispatch(new CSVFileImportJob(Storage::url($fileName)));
             return back()
