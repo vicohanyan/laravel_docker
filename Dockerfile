@@ -20,6 +20,7 @@ CMD cron && touch /var/log/cron.log && tail -F /var/log/cron.log
 
 # Install composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+RUN chmod +x /usr/bin/composer
 
 # Add user for laravel application
 RUN groupadd -g 1000 www

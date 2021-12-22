@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CSVUploadController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +14,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/', [CSVUploadController::class, 'createForm'])->name('file.form');
+Route::post('/upload/', [CSVUploadController::class, 'fileUpload'])->name('file.upload');
+

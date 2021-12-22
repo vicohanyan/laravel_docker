@@ -119,6 +119,13 @@
       <excludeFolder url="file://$MODULE_DIR$/application/vendor/phpdocumentor/type-resolver" />
       <excludeFolder url="file://$MODULE_DIR$/application/vendor/phpdocumentor/reflection-common" />
       <excludeFolder url="file://$MODULE_DIR$/application/vendor/graham-campbell/result-type" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/markbaker/complex" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/markbaker/matrix" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/myclabs/php-enum" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/maatwebsite/excel" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/phpoffice/phpspreadsheet" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/ezyang/htmlpurifier" />
+      <excludeFolder url="file://$MODULE_DIR$/application/vendor/maennchen/zipstream-php" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
