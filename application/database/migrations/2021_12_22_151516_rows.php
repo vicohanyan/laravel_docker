@@ -16,7 +16,7 @@ class Rows extends Migration
         Schema::create('rows', function (Blueprint $table) {
             $table->bigInteger('id')->primary();
             $table->string('name');
-            $table->timestamp('date');
+            $table->date('date');
         });
     }
 

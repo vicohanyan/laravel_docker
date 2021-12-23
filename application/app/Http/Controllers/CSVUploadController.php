@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Jobs\CSVFileImportJob;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class CSVUploadController extends Controller
 {
@@ -29,7 +28,7 @@ class CSVUploadController extends Controller
             $fileName = time() . '_' . $request->file->getClientOriginalName();
             $request->file('file')->storeAs('uploads', $fileName, 'public');
             // Run CSV import Job
-            $this->dispatch(new CSVFileImportJob(Storage::url($fileName)));
+            $this->dispatch(new CSVFileImportJob($request->file));
             return back()
                 ->with('success', 'File has been uploaded.')
                 ->with('file', $fileName);

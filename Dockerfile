@@ -18,16 +18,15 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Run the command on container startup
 CMD cron && touch /var/log/cron.log && tail -F /var/log/cron.log
 
-# Install composer
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
-RUN chmod +x /usr/bin/composer
-
 # Add user for laravel application
 RUN groupadd -g 1000 www
 RUN useradd -u 1000 -ms /bin/bash -g www www
 
 # Copy existing application directory contents
 COPY . /var/www
+
+## Install composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 # Copy existing application directory permissions
 COPY --chown=www:www . /var/www

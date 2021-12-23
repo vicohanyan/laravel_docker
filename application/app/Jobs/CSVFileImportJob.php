@@ -33,6 +33,6 @@ class CSVFileImportJob implements ShouldQueue
      */
     public function handle()
     {
-        Excel::import(new CSVImport(), $this->filePath);
+        Excel::import(new CSVImport(), $this->filePath,null,\Maatwebsite\Excel\Excel::CSV);
     }
 }
