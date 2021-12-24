@@ -2,12 +2,23 @@
 
 namespace App\Http\Controllers;
 
-use App\Jobs\CSVFileImportJob;
+use App\Services\CSVImportService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class CSVUploadController extends Controller
 {
+
+    private CSVImportService $CSVImportService;
+
+    /**
+     * @param CSVImportService $CSVImportService
+     */
+    public function __construct(CSVImportService $CSVImportService)
+    {
+        $this->CSVImportService = $CSVImportService;
+    }
 
     public function createForm()
     {
@@ -26,9 +37,9 @@ class CSVUploadController extends Controller
 
         if ($request->file()) {
             $fileName = time() . '_' . $request->file->getClientOriginalName();
-            $request->file('file')->storeAs('uploads', $fileName, 'public');
-            // Run CSV import Job
-            $this->dispatch(new CSVFileImportJob($request->file));
+            $filePath = $request->file('file')->storeAs('uploads', $fileName);
+            // Run CSV import
+            $this->CSVImportService->import(Storage::path($filePath));
             return back()
                 ->with('success', 'File has been uploaded.')
                 ->with('file', $fileName);

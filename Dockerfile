@@ -2,10 +2,18 @@ FROM php:7.4-fpm
 
 WORKDIR /var/www/application
 
+# Install programs
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y curl git zip unzip libpq-dev libwebp-dev libzip-dev libpng-dev python3 libfreetype6-dev libjpeg62-turbo-dev procps sudo acl cron
+    apt-get install -y curl git zip unzip libpq-dev libwebp-dev libzip-dev libpng-dev python3 libfreetype6-dev \
+     libjpeg62-turbo-dev procps sudo acl cron
 
+# Install/Enable php-redis
+RUN pecl install -o -f redis \
+&&  rm -rf /tmp/pear \
+&&  docker-php-ext-enable redis
+
+# Install/Enable php extensions
 RUN docker-php-ext-install pdo_mysql pdo_pgsql tokenizer exif zip && \
     docker-php-ext-configure gd --enable-gd --with-freetype --with-jpeg && \
     docker-php-ext-install -j$(nproc) gd && \

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Services\CSVImportService;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -13,7 +14,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->registerCSVImportService();
     }
 
     /**
@@ -24,5 +25,12 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         //
+    }
+
+    private function registerCSVImportService()
+    {
+        $this->app->singleton(CSVImportService::class, function() {
+            return new CSVImportService();
+        });
     }
 }
