@@ -21,9 +21,10 @@ class CSVImportService
         if ($file = $handle) {
             while (!feof($file)) {
                 $line = fgetcsv($file);
+                // Ignoring header line
                 if (empty($line)) continue;
+                // Ignoring empty lines
                 if (empty(intval($line[0]))) continue;
-
                 $date = Carbon::createFromFormat('d.m.y', rtrim($line[2], ' '))->format('Y-m-d');
                 $insertData[] = [
                     "id" => $line[0],
@@ -32,11 +33,13 @@ class CSVImportService
                 ];
                 $rowCount++;
                 if ($rowCount == 1000) {
+                    // Start import records per 1000 rows
                     CSVFileImportJob::dispatch($insertData, $uniqueKey);
                     $insertData = [];
                     $rowCount = 0;
                 }
             }
+            // Start import remaining records
             CSVFileImportJob::dispatch($insertData, $uniqueKey);
             fclose($file);
             unlink($filePath);
